@@ -113,9 +113,9 @@ int main()
         sf::Style::Titlebar | sf::Style::Close
     );
 
-    const int HASH_LIST_LEN = 512;
+    const int HASH_LIST_LEN = 64;
     int lastHashPtr = 0;
-    std::string hashList[512];
+    std::string hashList[HASH_LIST_LEN];
     for (int i = 0; i < HASH_LIST_LEN; i++) {
         hashList[i] = "something random to start off with, it doesn't matter what";
     }
@@ -152,15 +152,20 @@ int main()
             }
 
             std::string hashStr = getHash();
+            bool stateRepeated = false;
             for (int i = 0; i < HASH_LIST_LEN; i++) {
                 if (hashStr == hashList[i]) {
                     equilibriumCount++;
+                    stateRepeated = true;
                 }
+            }
+            if (!stateRepeated) {
+                equilibriumCount = 0;
             }
             hashList[lastHashPtr] = hashStr;
             lastHashPtr = (lastHashPtr + 1) % HASH_LIST_LEN;
 
-            if (equilibriumCount > 50) {
+            if (equilibriumCount > HASH_LIST_LEN) {
                 paused = true;
                 if (!ended) {
                     std::cout << "Equilibrium Reached!" << std::endl;
